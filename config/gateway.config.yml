@@ -21,8 +21,6 @@ serviceEndpoints:
     url: "http://localhost:3000"
   accommodationTypesService:
     url: "http://localhost:3000"
-  httpbin:
-    url: "https://httpbin.org"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
@@ -46,13 +44,18 @@ pipelines:
               methods: "GET, POST, PATCH, DELETE, OPTIONS"
       - log:
           - action:
-              message: "{{req.method}} request to {{req.url}}"
+              message: "${req.method} request to ${req.url}"
+              level: info
   accommodationsPipeline:
     apiEndpoints:
       - accommodations
       - amenities
       - accommodationTypes
     policies:
+      - log:
+          - action:
+              message: "Accommodations Pipeline - ${req.method} request to ${req.url}"
+              level: info
       - proxy:
           - action:
               serviceEndpoint: accommodationsService
