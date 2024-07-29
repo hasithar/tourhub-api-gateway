@@ -4,8 +4,25 @@ admin:
   port: 9876
   host: localhost
 apiEndpoints:
+  accommodations:
+    host: localhost
+    paths: "/accommodations/*"
+  amenities:
+    host: localhost
+    paths: "/amenities/*"
+  accommodationTypes:
+    host: localhost
+    paths: "/accommodation-types/*"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
 serviceEndpoints:
+  accommodationsService:
+    url: "http://localhost:3000"
+  amenitiesService:
+    url: "http://localhost:3000"
+  accommodationTypesService:
+    url: "http://localhost:3000"
+  httpbin:
+    url: "https://httpbin.org"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
@@ -17,4 +34,27 @@ policies:
   - proxy
   - rate-limit
 pipelines:
+  default:
+    apiEndpoints:
+      - accommodations
+      - amenities
+      - accommodationTypes
+    policies:
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET, POST, PATCH, DELETE, OPTIONS"
+      - log:
+          - action:
+              message: "{{req.method}} request to {{req.url}}"
+  accommodationsPipeline:
+    apiEndpoints:
+      - accommodations
+      - amenities
+      - accommodationTypes
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: accommodationsService
+              changeOrigin: true
   # see: https://www.express-gateway.io/docs/configuration/gateway.config.yml/pipelines
