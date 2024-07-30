@@ -3,6 +3,8 @@ http:
 admin:
   port: 9876
   host: localhost
+# ---------------------------------------------------------------------------------------
+# api endpoints
 apiEndpoints:
   accommodations:
     host: localhost
@@ -13,10 +15,20 @@ apiEndpoints:
   accommodationTypes:
     host: localhost
     paths: "/accommodation-types/*"
+  activityTypes:
+    host: localhost
+    paths: "/activity-types/*"
+  activities:
+    host: localhost
+    paths: "/activities/*"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
+# ---------------------------------------------------------------------------------------
+# service endpoints
 serviceEndpoints:
   accommodationsService:
     url: "http://accommodation-service:3000"
+  activitiesService:
+    url: "http://activity-service:3000"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
@@ -27,12 +39,16 @@ policies:
   - oauth2
   - proxy
   - rate-limit
+# ---------------------------------------------------------------------------------------
+# pipelines
 pipelines:
   default:
     apiEndpoints:
       - accommodations
       - amenities
       - accommodationTypes
+      - activityTypes
+      - activities
     policies:
       - cors:
           - action:
@@ -55,5 +71,18 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: accommodationsService
+              changeOrigin: true
+  activitiesPipeline:
+    apiEndpoints:
+      - activityTypes
+      - activities
+    policies:
+      - log:
+          - action:
+              message: "Activities Pipeline - ${req.method} request to ${req.url}"
+              level: info
+      - proxy:
+          - action:
+              serviceEndpoint: activitiesService
               changeOrigin: true
   # see: https://www.express-gateway.io/docs/configuration/gateway.config.yml/pipelines

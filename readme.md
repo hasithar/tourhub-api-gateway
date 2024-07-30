@@ -51,10 +51,16 @@ Ensure the microservices (Accommodations, Activities, etc.) are running on their
 
 The API Gateway routes requests to the following endpoints:
 
-- `/accommodations/*` - Routes to the Accommodations service
-- `/amenities/*` - Routes to the Amenities service
-- `/accommodation-types/*` - Routes to the Accommodation Types service
-- `/activities/*` - Routes to the Activities service
+#### Routes to the Accommodations service
+
+- `/accommodations/*`
+- `/amenities/*`
+- `/accommodation-types/*`
+
+#### Routes to the Activities service
+
+- `/activity-types/*`
+- `/activities/*`
 
 Refer to the `gateway.config.yml` for more detailed endpoint configurations.
 
