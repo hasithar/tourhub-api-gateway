@@ -62,6 +62,11 @@ The API Gateway routes requests to the following endpoints:
 - `/activity-types/*`
 - `/activities/*`
 
+#### Routes to the Attractions service
+
+- `/attraction-types/*`
+- `/attractions/*`
+
 Refer to the `gateway.config.yml` for more detailed endpoint configurations.
 
 ## Logging and Monitoring

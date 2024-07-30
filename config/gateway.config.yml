@@ -21,6 +21,12 @@ apiEndpoints:
   activities:
     host: localhost
     paths: "/activities/*"
+  attractionTypes:
+    host: localhost
+    paths: "/attraction-types/*"
+  attractions:
+    host: localhost
+    paths: "/attractions/*"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
 # ---------------------------------------------------------------------------------------
 # service endpoints
@@ -29,6 +35,8 @@ serviceEndpoints:
     url: "http://accommodation-service:3000"
   activitiesService:
     url: "http://activity-service:3000"
+  attractionsService:
+    url: "http://attraction-service:3000"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
@@ -49,6 +57,8 @@ pipelines:
       - accommodationTypes
       - activityTypes
       - activities
+      - attractionTypes
+      - attractions
     policies:
       - cors:
           - action:
@@ -84,5 +94,18 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: activitiesService
+              changeOrigin: true
+  attractionsPipeline:
+    apiEndpoints:
+      - attractionTypes
+      - attractions
+    policies:
+      - log:
+          - action:
+              message: "Attractions Pipeline - ${req.method} request to ${req.url}"
+              level: info
+      - proxy:
+          - action:
+              serviceEndpoint: attractionsService
               changeOrigin: true
   # see: https://www.express-gateway.io/docs/configuration/gateway.config.yml/pipelines
