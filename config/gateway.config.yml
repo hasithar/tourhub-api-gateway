@@ -16,11 +16,7 @@ apiEndpoints:
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
 serviceEndpoints:
   accommodationsService:
-    url: "http://localhost:3000"
-  amenitiesService:
-    url: "http://localhost:3000"
-  accommodationTypesService:
-    url: "http://localhost:3000"
+    url: "http://accommodation-service:3000"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
