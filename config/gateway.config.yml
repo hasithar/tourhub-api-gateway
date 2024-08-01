@@ -27,6 +27,18 @@ apiEndpoints:
   attractions:
     host: localhost
     paths: "/attractions/*"
+  users:
+    host: localhost
+    paths: "/users/*"
+  roles:
+    host: localhost
+    paths: "/roles/*"
+  profiles:
+    host: localhost
+    paths: "/profiles/*"
+  auth:
+    host: localhost
+    paths: "/auth/*"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
 # ---------------------------------------------------------------------------------------
 # service endpoints
@@ -37,6 +49,8 @@ serviceEndpoints:
     url: "http://activity-service:3000"
   attractionsService:
     url: "http://attraction-service:3000"
+  usersService:
+    url: "http://user-service:3000"
   # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
 policies:
   - basic-auth
@@ -59,6 +73,10 @@ pipelines:
       - activities
       - attractionTypes
       - attractions
+      - users
+      - roles
+      - profiles
+      - auth
     policies:
       - cors:
           - action:
@@ -107,5 +125,20 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: attractionsService
+              changeOrigin: true
+  usersPipeline:
+    apiEndpoints:
+      - users
+      - roles
+      - profiles
+      - auth
+    policies:
+      - log:
+          - action:
+              message: "Users Pipeline - ${req.method} request to ${req.url}"
+              level: info
+      - proxy:
+          - action:
+              serviceEndpoint: usersService
               changeOrigin: true
   # see: https://www.express-gateway.io/docs/configuration/gateway.config.yml/pipelines
